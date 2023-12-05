@@ -11,7 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build the Docker Iamge
-        run: docker build . --file Dockerfile -t forest:$(date + %s)
+        run: docker build . --file Dockerfile -tag forest:$(date + %s)
+
   # test:
   #   runs-on: ubuntu-latest
   #   steps:
