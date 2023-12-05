@@ -1,0 +1,21 @@
+name: Docker Iamge build
+
+on:
+  pull_request:
+    branches: ['dev']
+
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker Iamge
+        run: docker build . --file Dockerfile -t forest:$(date + %s)
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - run: npm install -g pnpm
+  #     - run: pnpm install
+  #     - run: pnpm test
