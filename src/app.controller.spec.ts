@@ -16,7 +16,9 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.heartBeat()).toBe('Hello World!');
+      expect(appController.heartBeat()).toBe(
+        `Listen to my Heart Beat! PORT: ${8080}`,
+      );
     });
   });
 });
