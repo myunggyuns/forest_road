@@ -2,6 +2,7 @@ name: Docker Iamge build
 
 on:
   pull_request:
+    types: [closed]
     branches: ['dev']
 
 env:

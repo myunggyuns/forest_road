@@ -4,7 +4,9 @@ on:
       - 'feature/*'
 
 jobs:
-  lint-and-test-check:
+
+  test-check:
+
     runs-on: ubuntu-latest
 
     steps:
