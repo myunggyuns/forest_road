@@ -23,3 +23,5 @@ docker images
 docker ps -a
 docker image rm [image]
 docker rm [컨테이너id]
+
+"closed test용 text 수정"
