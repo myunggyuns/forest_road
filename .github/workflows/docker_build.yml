@@ -1,8 +1,8 @@
 name: Docker Iamge build
 
 on:
-  pull_request:
-    types: [closed]
+  pull_request_review:
+    types: [submitted]
     branches: ['dev']
 
 env:
