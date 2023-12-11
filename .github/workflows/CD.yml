@@ -2,9 +2,8 @@ name: Deploy to ECR
 
 on:
   release:
-    branches:
-      - main
-      - dev
+    types: ['published']
+    branches: ['dev']
 
 jobs:
   aws-login:
