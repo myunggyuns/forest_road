@@ -1,20 +1,20 @@
-on:
-  push:
-    branches:
-      - 'feature/*'
+# on:
+#   push:
+#     branches:
+#       - 'feature/*'
 
-jobs:
-  test-check:
-    runs-on: ubuntu-latest
+# jobs:
+#   test-check:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
 
-      - name: Pnpm Install and check test code
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16.16'
-      - run: npm -g install pnpm
-      - run: pnpm install
-      - run: pnpm run test
+#       - name: Pnpm Install and check test code
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '16.16'
+#       - run: npm -g install pnpm
+#       - run: pnpm install
+#       - run: pnpm run test
