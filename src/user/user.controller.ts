@@ -22,15 +22,15 @@ export class UserController {
   async signup(@Request() req: Request) {
     const { body } = req;
     const user = await this.userService.signup(body);
-    console.log(user);
     return { data: user };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  signin(@Request() req: Request) {
+  async signin(@Request() req: Request) {
     const { body } = req;
-    return this.userService.signin(body);
+    const user = await this.userService.signin(body);
+    return { data: user };
   }
 
   @Post('gen-token')

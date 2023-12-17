@@ -4,6 +4,7 @@ import { validate } from '../env/env.validation';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+// import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -18,3 +19,16 @@ import { UserModule } from './user/user.module';
   controllers: [AppController],
 })
 export class AppModule {}
+
+/**
+ *     // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root',
+    //   password: '12345678',
+    //   database: 'test',
+    //   entities: [],
+    //   synchronize: true,
+    // }),
+ */
