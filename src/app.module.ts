@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from '../env/env.validation';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -11,8 +12,9 @@ import { validate } from '../env/env.validation';
       envFilePath: `./env/.${process.env.NODE_ENV}.env`,
       validate,
     }),
+    UserModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {}

@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class UserService {
+export class RoomService {
   constructor(private readonly configService: ConfigService) {}
-  signup() {}
-  signin() {}
-  getToken() {}
+  waiting() {}
+  progress() {}
 }
