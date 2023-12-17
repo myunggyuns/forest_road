@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validate } from '../env/env.validation';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BookingModule } from './booking/booking.module';
 import { UserModule } from './user/user.module';
 // import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
       validate,
     }),
     UserModule,
+    BookingModule,
   ],
   providers: [AppService],
   controllers: [AppController],
