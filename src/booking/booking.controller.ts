@@ -15,8 +15,8 @@ export class BookingController {
   }
 
   @Get(':id/:date')
-  concertSeat() {
-    return this.bookingService.concertSeat();
+  concertSeat(@Param() param: string[]) {
+    return this.bookingService.concertSeat(param['id'], param['date']);
   }
 
   @Post()
@@ -27,6 +27,7 @@ export class BookingController {
   @Post('create')
   createConcert(@Request() req: Request) {
     const { body } = req;
+    console.log(body)
     return this.bookingService.createConcert(body);
   }
 }
