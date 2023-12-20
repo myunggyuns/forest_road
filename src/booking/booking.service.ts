@@ -11,7 +11,15 @@ export class BookingService {
     private bookingRepository: Repository<Booking>,
   ) {}
 
-  list() {}
+  async list() {
+    try {
+      const concertList = await this.bookingRepository.find();
+      return concertList;
+    } catch (error) {
+      console.log(error)
+      return error;
+    }
+  }
 
   async concertDate(id: string) {
     const concertList = await this.bookingRepository.findOneBy({
@@ -25,7 +33,9 @@ export class BookingService {
     return list;
   }
 
-  concertSeat() {}
+  async concertSeat(concertId: string, date: string) {
+    const result = await this.bookingRepository.findOneBy({id: Number(concertId)});
+  }
 
   booking() {}
 
@@ -34,7 +44,7 @@ export class BookingService {
     const concert = new Booking();
     concert.title = title;
     concert.date_list = JSON.stringify(date_list);
-    concert.seat_list = seat_list;
+    concert.seat_list = ['1', '2'];
     concert.singer = singer;
     const saveConcert = await this.bookingRepository.save(concert);
     return saveConcert;
