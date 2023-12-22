@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Request } from '@nestjs/common';
 import { CostService } from './cost.service';
 
 @Controller('cost')
@@ -10,12 +10,15 @@ export class CostController {
   }
 
   @Post('payment')
-  payment() {
-    return this.costService.payment();
+  payment(@Request() req:Request) {
+    const {body} = req;
+    return this.costService.payment(body);
   }
 
   @Post('charge')
-  charge() {
-    return this.costService.charge();
+  charge(@Request() req: Request) {
+    const {body} = req;
+    return this.costService.charge(body);
   }
+
 }
