@@ -29,6 +29,16 @@ export class CostService {
     cost.booking_date = booking_date;
     cost.booking_seat_num = booking_seat_num;
     const saveCost = await this.costRepository.save(cost);
-    return cost;
+    return saveCost;
+  }
+
+  async createCharge(body) {
+    const { amount, booking_date, booking_seat_num } = body;
+    const cost = new Cost();
+    cost.amount = amount;
+    cost.booking_date = booking_date;
+    cost.booking_seat_num = booking_seat_num;
+    const saveCost = await this.costRepository.save(cost);
+    return saveCost;
   }
 }

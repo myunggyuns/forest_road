@@ -4,9 +4,9 @@ import { BookingService } from './booking.service';
 @Controller('booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
-  @Get('list')
-  list() {
-    return this.bookingService.list();
+  @Get('concertlist')
+  concertList() {
+    return this.bookingService.concertList();
   }
 
   @Get(':id')
@@ -19,8 +19,9 @@ export class BookingController {
   }
 
   @Post()
-  booking() {
-    return this.bookingService.booking();
+  booking(@Request() req: Request) {
+    const { body } = req;
+    return this.bookingService.booking(body);
   }
 
   @Post('create')

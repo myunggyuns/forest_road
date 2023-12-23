@@ -20,4 +20,10 @@ export class CostController {
     const { body } = req;
     return this.costService.charge(body);
   }
+
+  @Post('create')
+  create(@Request() req: Request) {
+    const { body } = req;
+    return this.costService.createCharge(body);
+  }
 }

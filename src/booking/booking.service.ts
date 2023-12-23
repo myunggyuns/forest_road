@@ -11,7 +11,7 @@ export class BookingService {
     private bookingRepository: Repository<Booking>,
   ) {}
 
-  async list() {
+  async concertList() {
     try {
       const concertList = await this.bookingRepository.find();
       return concertList;
@@ -38,7 +38,9 @@ export class BookingService {
     }
   }
 
-  booking() {}
+  booking(body) {
+    console.log(body);
+  }
 
   async createConcert(body) {
     const { title, date_list, singer } = body;

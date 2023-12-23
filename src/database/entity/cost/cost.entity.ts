@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class Cost{
+export class Cost {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  amount: number
+  amount: number;
 
   @Column()
   booking_date: string;

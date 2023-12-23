@@ -17,7 +17,7 @@ import { UserModule } from './user/user.module';
     }),
     UserModule,
     BookingModule,
-    CostModule
+    CostModule,
   ],
   providers: [AppService],
   controllers: [AppController],
