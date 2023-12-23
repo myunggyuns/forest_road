@@ -10,15 +10,14 @@ export class CostController {
   }
 
   @Post('payment')
-  payment(@Request() req:Request) {
-    const {body} = req;
+  payment(@Request() req: Request) {
+    const { body } = req;
     return this.costService.payment(body);
   }
 
   @Post('charge')
   charge(@Request() req: Request) {
-    const {body} = req;
+    const { body } = req;
     return this.costService.charge(body);
   }
-
 }

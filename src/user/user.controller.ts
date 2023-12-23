@@ -33,8 +33,9 @@ export class UserController {
     return { data: user };
   }
 
-  @Post('gen-token')
-  getToken() {
-    return this.userService.getToken();
+  @Post('gen-user-token')
+  generateUserToken(@Request() req: Request) {
+    const { body } = req;
+    return this.userService.generateUserToken(body);
   }
 }

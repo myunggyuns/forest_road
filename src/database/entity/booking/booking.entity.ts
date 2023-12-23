@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { DateList } from 'src/type/entity.type';
 
 @Entity()
 export class Booking {
@@ -11,9 +12,6 @@ export class Booking {
   @Column()
   singer: string;
 
-  @Column('simple-array')
-  date_list: string;
-
-  @Column('simple-array')
-  seat_list: string[];
+  @Column({ type: 'json' })
+  date_list: DateList[];
 }

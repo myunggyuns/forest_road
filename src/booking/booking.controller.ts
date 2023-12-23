@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Request } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
 import { BookingService } from './booking.service';
 
 @Controller('booking')
@@ -10,13 +10,12 @@ export class BookingController {
   }
 
   @Get(':id')
-  concertDate(@Param('id') id: string) {
-    return this.bookingService.concertDate(id);
-  }
-
-  @Get(':id/:date')
-  concertSeat(@Param() param: string[]) {
-    return this.bookingService.concertSeat(param['id'], param['date']);
+  concertDate(@Param('id') id: string, @Query('date') date: string) {
+    if (date) {
+      return this.bookingService.concertSeat(id, date);
+    } else {
+      return this.bookingService.concertDate(id);
+    }
   }
 
   @Post()
@@ -27,7 +26,6 @@ export class BookingController {
   @Post('create')
   createConcert(@Request() req: Request) {
     const { body } = req;
-    console.log(body)
     return this.bookingService.createConcert(body);
   }
 }
