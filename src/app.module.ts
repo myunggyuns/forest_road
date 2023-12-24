@@ -5,8 +5,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BookingModule } from './booking/booking.module';
 import { CostModule } from './cost/cost.module';
+import { RoomModule } from './room/room.module';
 import { UserModule } from './user/user.module';
-// import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { User } from './database/entity/user/user.entity';
+import { Booking } from './database/entity/booking/booking.entity';
+import { Cost } from './database/entity/cost/cost.entity';
 
 @Module({
   imports: [
@@ -18,11 +23,24 @@ import { UserModule } from './user/user.module';
     UserModule,
     BookingModule,
     CostModule,
+    RoomModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '12345678',
+      database: 'test',
+      entities: [User, Booking, Cost],
+      synchronize: true,
+    }),
   ],
   providers: [AppService],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}
 
 /**
  *     // TypeOrmModule.forRoot({

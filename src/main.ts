@@ -1,11 +1,14 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+// import { JwtService } from '@nestjs/jwt';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  // console.log('!!!!!!!!! Running Port: ', configService.get<number>('PORT'));
-  await app.listen(configService.get<number>('PORT'));
+  // const jwtService = app.get(JwtService);
+  await app.listen(configService.get<number>('PORT'), () => {
+    console.log(`Server is Starting!!`);
+  });
 }
 bootstrap();

@@ -23,3 +23,13 @@ export const databaseProviders = [
     },
   },
 ];
+// export class DatabaseManager {
+//   providers;
+//   constructor(private datebaseProviders) {
+//     this.providers = databaseProviders;
+//   }
+
+//   getProviders() {
+//     return [...this.providers];
+//   }
+// }

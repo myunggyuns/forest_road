@@ -1,19 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Booking } from 'src/database/entity/booking/booking.entity';
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { RoomManager } from 'src/service/room';
+import { User } from 'src/database/entity/user/user.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class BookingService {
+export class BookingService extends RoomManager {
   constructor(
-    private readonly configService: ConfigService,
-    @Inject('BOOKING_REPOSITORY')
-    private bookingRepository: Repository<Booking>,
-  ) {}
+    readonly configService: ConfigService,
+    readonly jwtService: JwtService,
+    readonly dataSource: DataSource,
+  ) {
+    super(configService, jwtService, dataSource);
+  }
 
   async concertList() {
     try {
-      const concertList = await this.bookingRepository.find();
+      const concertList = await this.dataSource.getRepository(Booking).find();
       return concertList;
     } catch (error) {
       console.log(error);
@@ -22,14 +27,14 @@ export class BookingService {
   }
 
   async concertDate(id: string) {
-    const concertList = await this.bookingRepository.findOneBy({
+    const concertList = await this.dataSource.getRepository(Booking).findOneBy({
       id: Number(id),
     });
     return concertList;
   }
 
   async concertSeat(concertId: string, date: string) {
-    const result = await this.bookingRepository.findOneBy({
+    const result = await this.dataSource.getRepository(Booking).findOneBy({
       id: Number(concertId),
     });
     if (result && result.date_list) {
@@ -38,8 +43,19 @@ export class BookingService {
     }
   }
 
-  booking(body) {
-    console.log(body);
+  async booking(body) {
+    const { email } = body;
+    const user = await this.dataSource.getRepository(User).findOneBy({ email });
+    if (!this.room.has(user.uuid)) {
+      await this.joinQueue(user);
+    } else {
+      return 'Already join room!';
+    }
+  }
+
+  async roomStatus(body) {
+    const { email } = body;
+    return await this.getRoomStatus(email);
   }
 
   async createConcert(body) {
@@ -48,7 +64,9 @@ export class BookingService {
     concert.title = title;
     concert.date_list = date_list;
     concert.singer = singer;
-    const saveConcert = await this.bookingRepository.save(concert);
+    const saveConcert = await this.dataSource
+      .getRepository(Booking)
+      .save(concert);
     return saveConcert;
   }
 }
