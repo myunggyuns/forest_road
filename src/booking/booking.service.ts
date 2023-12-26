@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Booking } from 'src/database/entity/booking/booking.entity';
+import { Booking } from '@/database/entity/booking/booking.entity';
 import { DataSource } from 'typeorm';
-import { RoomManager } from 'src/service/room';
-import { User } from 'src/database/entity/user/user.entity';
+import { RoomManager } from '@/service/room';
+import { User } from '@/database/entity/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

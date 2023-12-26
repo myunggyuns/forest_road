@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from 'src/user/user.service';
-import { UserController } from 'src/user/user.controller';
+import { UserService } from '@/user/user.service';
+import { UserController } from '@/user/user.controller';
 
 describe('User test', () => {
   let controller: UserController;
@@ -26,7 +26,7 @@ describe('User test', () => {
   });
 
   it('shoud be defined', () => {
-    console.log(service, controller);
+    // console.log(service, controller);
     expect(service).toBeDefined();
   });
 });

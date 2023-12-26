@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
-import { Cost } from 'src/database/entity/cost/cost.entity';
+import { Cost } from '@/database/entity/cost/cost.entity';
 
 @Injectable()
 export class CostService {

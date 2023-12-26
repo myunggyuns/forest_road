@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Booking } from 'src/database/entity/booking/booking.entity';
-import { User } from 'src/database/entity/user/user.entity';
+import { Booking } from '@/database/entity/booking/booking.entity';
+import { User } from '@/database/entity/user/user.entity';
 // import { bookingProviders } from 'src/database/entity/booking/booking.providers';
 // import { userProviders } from 'src/database/entity/user/user.providers';
-import { RoomService } from 'src/room/room.service';
+import { RoomService } from '@/room/room.service';
 import { BookingController } from './booking.controller';
 import { BookingService } from './booking.service';
 
