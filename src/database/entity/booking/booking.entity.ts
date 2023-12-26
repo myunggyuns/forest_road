@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { DateList } from 'src/type/entity.type';
+import { DateList } from '@/type/entity.type';
 
 @Entity()
 export class Booking {

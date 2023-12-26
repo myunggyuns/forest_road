@@ -5,6 +5,7 @@ enum Enviroment {
   Development = 'development',
   Prod = 'prod',
   Local = 'local',
+  Test = 'test',
 }
 
 class EnviromentVarialbes {
