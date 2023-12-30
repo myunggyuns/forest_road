@@ -12,30 +12,33 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  healthCheck() {
-    return 'hello world';
-  }
+  // @Get()
+  // healthCheck() {
+  //   return 'hello world';
+  // }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
   async signup(@Request() req: Request) {
     const { body } = req;
-    const user = await this.userService.signup(body);
-    return { data: user };
+    return await this.userService.signup(body);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
   async signin(@Request() req: Request) {
     const { body } = req;
-    const user = await this.userService.signin(body);
-    return { data: user };
+    return await this.userService.signin(body);
   }
 
-  @Post('gen-user-token')
-  generateUserToken(@Request() req: Request) {
-    const { body } = req;
-    return this.userService.generateUserToken(body);
+  // @Post('gen-user-token')
+  // generateUserToken(@Request() req: Request) {
+  // const { body } = req;
+  // return this.userService.generateUserToken(body);
+  // }
+
+  @Get()
+  async findAll() {
+    return await this.userService.findAll();
   }
 }

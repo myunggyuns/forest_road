@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Cost {
   @PrimaryGeneratedColumn()
-  id: number;
+  cost_id: number;
 
   @Column()
   amount: number;
@@ -13,4 +14,7 @@ export class Cost {
 
   @Column()
   booking_seat_num: string;
+
+  @OneToOne(() => User, (User) => User.cost)
+  user: User;
 }

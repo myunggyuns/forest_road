@@ -17,7 +17,7 @@ export class CostService {
 
   async payment(body) {
     const { amount } = body;
-    const result = await this.costRepository.update({ id: 1 }, { amount });
+    const result = await this.costRepository.update({ cost_id: 1 }, { amount });
     console.log(result.affected);
     return await this.costRepository.find();
   }

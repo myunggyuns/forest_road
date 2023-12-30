@@ -2,25 +2,20 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 // import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/database/entity/user/user.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DatabaseSource } from '@/database';
 
-export class RoomManager {
+export class RoomManager extends DatabaseSource {
   room: Map<string, User>;
   configService: ConfigService;
   jwtService: JwtService;
   waitingQueue: User[];
-  userRepo: Repository<User>;
   waitIndex: number;
 
-  constructor(
-    configService: ConfigService,
-    jwtServcie: JwtService,
-    dataSource: DataSource,
-  ) {
+  constructor(configService: ConfigService, jwtServcie: JwtService) {
+    super();
     this.room = new Map();
     this.configService = configService;
     this.jwtService = jwtServcie;
-    this.userRepo = dataSource.getRepository(User);
     this.waitingQueue = [];
     this.waitIndex = 0;
   }
@@ -29,11 +24,12 @@ export class RoomManager {
     const time = new Date();
     const payload = { uuid: user.uuid, time };
     const userToken = await this.jwtService.signAsync(payload);
-    await this.userRepo.update(
+    const userRepo = this.dataSource.getRepository(User);
+    await userRepo.update(
       { uuid: user.uuid },
       { status: 'work', user_token: userToken },
     );
-    const updateUser = await this.userRepo.findOneBy({ uuid: user.uuid });
+    const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
     this.room.set(user.uuid, updateUser);
     // console.log(this.room);
   }
@@ -41,10 +37,9 @@ export class RoomManager {
   async leaveRoom(user) {
     if (this.room.has(user.uuid)) {
       this.room.delete(user.uuid);
-      await this.userRepo.update(
-        { uuid: user.uuid },
-        { status: 'done', user_token: '' },
-      );
+      await this.dataSource
+        .getRepository(User)
+        .update({ uuid: user.uuid }, { status: 'done', user_token: '' });
       if (this.waitingQueue.length) {
         const queueUser = this.waitingQueue.shift();
         this.joinRoom(queueUser);
@@ -57,11 +52,12 @@ export class RoomManager {
     this.waitIndex++;
     const payload = { uuid: user.uuid, time, waitIndex: this.waitIndex };
     const userToken = await this.jwtService.signAsync(payload);
-    await this.userRepo.update(
+    const userRepo = this.dataSource.getRepository(User);
+    await userRepo.update(
       { uuid: user.uuid },
       { user_token: userToken, status: 'wait' },
     );
-    const updateUser = await this.userRepo.findOneBy({ uuid: user.uuid });
+    const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
     const size = this.configService.get('ROOM_SIZE');
     this.waitingQueue.push(updateUser);
     // console.log(this.waitingQueue);
@@ -73,7 +69,7 @@ export class RoomManager {
   }
 
   async getRoomStatus(email) {
-    const user = await this.userRepo.findOneBy({ email });
+    const user = await this.dataSource.getRepository(User).findOneBy({ email });
     let waitLine = 0;
     this.waitingQueue.forEach((value) => {
       if (user.uuid === value.uuid) {
@@ -81,10 +77,13 @@ export class RoomManager {
         waitLine = Number(payload.waitIndex);
       }
     });
+    console.log(this.room, this.waitingQueue);
     if (waitLine) {
       return waitLine.toString();
     } else {
       return 'exist in the room';
     }
   }
+
+  async payment() {}
 }
