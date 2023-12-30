@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Cost } from '../cost/cost.entity';
 
 export enum UserStatus {
   WAIT = 'wait',
@@ -27,4 +34,8 @@ export class User {
 
   @Column({ default: '' })
   user_token: string;
+
+  @OneToOne(() => Cost, (Cost) => Cost.user, { cascade: true })
+  @JoinColumn([{ name: 'cost_id' }])
+  cost: Cost;
 }
