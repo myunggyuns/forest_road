@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@/database/entity/user/user.entity';
 import { DatabaseSource } from '@/database/index';
 import { LoggerService } from '@/service/logger/logger.service';
+import * as moment from 'moment';
 
 /**
  * TODO
@@ -38,7 +39,7 @@ export class RoomManager extends DatabaseSource {
 
   private async joinRoom(user) {
     this.logger.log(`User enter joinRoom user.uuid: ${user.uuid}`, 'joinRoom');
-    const time = new Date();
+    const time = moment();
     const payload = { uuid: user.uuid, time };
     const userToken = await this.jwtService.signAsync(payload);
     const userRepo = this.dataSource.getRepository(User);
@@ -69,7 +70,7 @@ export class RoomManager extends DatabaseSource {
   }
 
   public async joinQueue(user) {
-    const time = new Date();
+    const time = moment();
     this.waitIndex++;
     this.logger.log(
       `User enter joinQueue user.uuid: ${user.uuid}`,
@@ -116,6 +117,4 @@ export class RoomManager extends DatabaseSource {
       return 'exist in the room';
     }
   }
-
-  private async payment() {}
 }

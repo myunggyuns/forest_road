@@ -87,4 +87,9 @@ export class BookingService extends RoomManager {
     };
     return await this.transaction(callback, true);
   }
+
+  async roomInfo() {
+    console.log(this.room);
+    return await this.room;
+  }
 }

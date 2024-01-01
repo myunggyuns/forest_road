@@ -9,6 +9,11 @@ export class BookingController {
     return this.bookingService.concertList();
   }
 
+  @Get('room-info')
+  roomInfo() {
+    return this.bookingService.roomInfo();
+  }
+
   @Post('status')
   roomStatus(@Request() req: Request) {
     const { body } = req;

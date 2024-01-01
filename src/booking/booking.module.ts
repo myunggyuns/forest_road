@@ -7,9 +7,18 @@ import { User } from '@/database/entity/user/user.entity';
 import { BookingController } from './booking.controller';
 import { BookingService } from '../service/booking/booking.service';
 import { LoggerModule } from '@/logger/logger.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking, User]), LoggerModule],
+  imports: [
+    TypeOrmModule.forFeature([Booking, User]),
+    LoggerModule,
+    JwtModule.register({
+      global: true,
+      secret: 'salt',
+      signOptions: { expiresIn: '60s' },
+    }),
+  ],
   providers: [BookingService],
   controllers: [BookingController],
 })

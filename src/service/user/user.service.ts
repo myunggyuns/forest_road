@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@/database/entity/user/user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseSource } from '@/database';
-import { Cost } from '@/database/entity/cost/cost.entity';
 
 @Injectable()
 export class UserService extends DatabaseSource {

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Request } from '@nestjs/common';
-import { CostService } from '../service/cost/cost.service';
+import { CostService } from '@/service/cost/cost.service';
 
 @Controller('cost')
 export class CostController {
