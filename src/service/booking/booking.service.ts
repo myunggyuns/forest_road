@@ -4,14 +4,16 @@ import { Booking } from '@/database/entity/booking/booking.entity';
 import { RoomManager } from '@/service/room';
 import { User } from '@/database/entity/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { LoggerService } from '@/service/logger/logger.service';
 
 @Injectable()
 export class BookingService extends RoomManager {
   constructor(
     readonly configService: ConfigService,
     readonly jwtService: JwtService,
+    readonly logger: LoggerService,
   ) {
-    super(configService, jwtService);
+    super(configService, jwtService, logger);
   }
 
   async concertList() {

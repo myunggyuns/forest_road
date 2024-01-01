@@ -31,17 +31,17 @@ export class UserService extends DatabaseSource {
 
       if (!user) {
         const newUser = new User();
-        const cost = new Cost();
+        // const cost = new Cost();
         newUser.email = body.email;
         newUser.password = body.password;
         newUser.nickname = body.nickName;
         newUser.uuid = uuidv4();
-        cost.amount = 20000;
-        newUser.cost = cost;
+        // cost.amount = 20000;
+        // newUser.cost = cost;
         // const payload = { sub: body.email, username: body.nickName };
         // const access_token = await this.jwtService.signAsync(payload);
         newUser.password = '';
-        return { newUser, cost };
+        return newUser;
       } else {
         throw new ConflictException('Exist User');
       }

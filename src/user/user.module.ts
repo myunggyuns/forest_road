@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/database/entity/user/user.entity';
 // import { userProviders } from '@/database/entity/user/user.providers';
 import { UserController } from '@/user/user.controller';
-import { UserService } from '@/user/user.service';
+import { UserService } from '@/service/user/user.service';
 
 @Module({
   imports: [

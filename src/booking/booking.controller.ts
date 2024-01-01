@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
-import { BookingService } from './booking.service';
+import { BookingService } from '../service/booking/booking.service';
 
 @Controller('booking')
 export class BookingController {

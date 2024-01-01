@@ -35,7 +35,7 @@ export class User {
   @Column({ default: '' })
   user_token: string;
 
-  @OneToOne(() => Cost, (Cost) => Cost.user, { cascade: true })
-  @JoinColumn([{ name: 'cost_id' }])
-  cost: Cost;
+  // @OneToOne(() => Cost, (Cost) => Cost.user, { cascade: true })
+  // @JoinColumn([{ name: 'cost_id' }])
+  // cost: Cost;
 }

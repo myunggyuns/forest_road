@@ -6,7 +6,7 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from '../service/user/user.service';
 
 @Controller('auth')
 export class UserController {

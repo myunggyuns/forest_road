@@ -15,6 +15,6 @@ export class Cost {
   @Column()
   booking_seat_num: string;
 
-  @OneToOne(() => User, (User) => User.cost)
-  user: User;
+  // @OneToOne(() => User, (User) => User.cost)
+  // user: User;
 }
