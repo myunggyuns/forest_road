@@ -33,16 +33,22 @@ export class CostService extends RoomManager {
 
     if (diffTime >= 5) {
       this.leaveRoom(user);
+      this.logger.warn('Invalid Token', 'payment');
     }
 
     if (this.room.has(user.uuid)) {
-      const result = await this.costRepository.update(
-        { cost_id: 1 },
-        { amount },
-      );
-      if (result) {
+      try {
+        const result = await this.costRepository.update(
+          { cost_id: 1 },
+          { amount },
+        );
+        if (result) {
+        }
+      } catch (error) {
+        this.logger.error(error.message, 'payment');
       }
     } else {
+      this.logger.warn('Not exist User in the Room', 'payment');
     }
 
     return await this.costRepository.find();

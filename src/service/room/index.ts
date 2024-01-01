@@ -50,22 +50,31 @@ export class RoomManager extends DatabaseSource {
       );
       const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
       this.room.set(user.uuid, updateUser);
-      // console.log(this.room);
     } catch (error) {
       this.logger.error(error.message, 'joinRoom');
     }
   }
 
   async leaveRoom(user) {
+    this.logger.log(
+      `User leave leaveRoom user.uuid: ${user.uuid}`,
+      'leaveRoom',
+    );
     if (this.room.has(user.uuid)) {
       this.room.delete(user.uuid);
-      await this.dataSource
-        .getRepository(User)
-        .update({ uuid: user.uuid }, { status: 'done', user_token: '' });
-      if (this.waitingQueue.length) {
-        const queueUser = this.waitingQueue.shift();
-        this.joinRoom(queueUser);
+      try {
+        await this.dataSource
+          .getRepository(User)
+          .update({ uuid: user.uuid }, { status: 'done', user_token: '' });
+        if (this.waitingQueue.length) {
+          const queueUser = this.waitingQueue.shift();
+          this.joinRoom(queueUser);
+        }
+      } catch (error) {
+        this.logger.error(error.message, 'leaveRoom');
       }
+    } else {
+      this.logger.warn(`Not exist User in the room ${user.uuid}`, 'leaveRoom');
     }
   }
 
@@ -79,18 +88,22 @@ export class RoomManager extends DatabaseSource {
     const payload = { uuid: user.uuid, time, waitIndex: this.waitIndex };
     const userToken = await this.jwtService.signAsync(payload);
     const userRepo = this.dataSource.getRepository(User);
-    await userRepo.update(
-      { uuid: user.uuid },
-      { user_token: userToken, status: 'wait' },
-    );
-    const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
-    const size = this.configService.get('ROOM_SIZE');
-    this.waitingQueue.push(updateUser);
-    // console.log(this.waitingQueue);
-    if (this.room.size < Number(size)) {
-      const queueUser = this.waitingQueue.shift();
-      this.joinRoom(queueUser);
-      this.waitIndex--;
+    try {
+      await userRepo.update(
+        { uuid: user.uuid },
+        { user_token: userToken, status: 'wait' },
+      );
+      const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
+      const size = this.configService.get('ROOM_SIZE');
+      this.waitingQueue.push(updateUser);
+      // console.log(this.waitingQueue);
+      if (this.room.size < Number(size)) {
+        const queueUser = this.waitingQueue.shift();
+        this.joinRoom(queueUser);
+        this.waitIndex--;
+      }
+    } catch (error) {
+      this.logger.error(error.message, 'joinQueue');
     }
   }
 
