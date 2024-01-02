@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Repository } from 'typeorm';
 import { Cost } from '@/database/entity/cost/cost.entity';
 import { RoomManager } from '../room';
 import { JwtService } from '@nestjs/jwt';
@@ -14,13 +13,12 @@ export class CostService extends RoomManager {
     readonly configService: ConfigService,
     readonly jwtService: JwtService,
     readonly logger: LoggerService,
-    @Inject('COST_REPOSITORY') private costRepository: Repository<Cost>,
   ) {
     super(configService, jwtService, logger);
   }
 
   async remainCost() {
-    const cost = await this.costRepository.find();
+    const cost = await this.dataSource.getRepository(User).find();
     return cost;
   }
 
@@ -38,10 +36,9 @@ export class CostService extends RoomManager {
 
     if (this.room.has(user.uuid)) {
       try {
-        const result = await this.costRepository.update(
-          { cost_id: 1 },
-          { amount },
-        );
+        const result = await this.dataSource
+          .getRepository(Cost)
+          .update({ cost_id: 1 }, { amount });
         if (result) {
         }
       } catch (error) {
@@ -51,7 +48,7 @@ export class CostService extends RoomManager {
       this.logger.warn('Not exist User in the Room', 'payment');
     }
 
-    return await this.costRepository.find();
+    return await this.dataSource.getRepository(Cost).find();
   }
 
   async charge(body) {
@@ -60,7 +57,7 @@ export class CostService extends RoomManager {
     cost.amount = amount;
     cost.booking_date = booking_date;
     cost.booking_seat_num = booking_seat_num;
-    const saveCost = await this.costRepository.save(cost);
+    const saveCost = await this.dataSource.getRepository(Cost).save(cost);
     return saveCost;
   }
 
@@ -70,7 +67,7 @@ export class CostService extends RoomManager {
     cost.amount = amount;
     cost.booking_date = booking_date;
     cost.booking_seat_num = booking_seat_num;
-    const saveCost = await this.costRepository.save(cost);
+    const saveCost = await this.dataSource.getRepository(Cost).save(cost);
     return saveCost;
   }
 }
