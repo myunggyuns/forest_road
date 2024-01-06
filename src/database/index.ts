@@ -11,7 +11,6 @@ export class DatabaseSource {
       await queryRunner.connect();
       await queryRunner.startTransaction();
       const result = await callback();
-      console.log(result);
       if (isSave) {
         await queryRunner.manager.save(result);
       }

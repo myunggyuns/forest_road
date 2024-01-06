@@ -27,4 +27,20 @@ export class RedisRepository
   ): Promise<void> {
     await this.redisClient.set(`${prefix}:${key}`, value, 'EX', expiry);
   }
+
+  async zadd(prefix: string, score: number, value: string) {
+    await this.redisClient.zadd(`${prefix}`, score, `${value}`);
+  }
+  async zrank(key: string, value: string) {
+    return await this.redisClient.zrank(key, value);
+  }
+  async zrange(key: string) {
+    return await this.redisClient.zrange(key, 0, -1);
+  }
+  async zrem(key: string, value: string) {
+    return await this.redisClient.zrem(key, value);
+  }
+  async zscan(key: string, value: number) {
+    this.redisClient.zscan(key, value);
+  }
 }

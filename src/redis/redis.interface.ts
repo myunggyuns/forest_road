@@ -8,4 +8,5 @@ export interface RedisRepositoryInterface {
     value: string,
     expiry: number,
   ): Promise<void>;
+  zadd(prefix: string, score: number, value: string): Promise<void>;
 }

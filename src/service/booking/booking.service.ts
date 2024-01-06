@@ -5,6 +5,7 @@ import { RoomManager } from '@/service/room';
 import { User } from '@/database/entity/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoggerService } from '@/service/logger/logger.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class BookingService extends RoomManager {
@@ -12,8 +13,9 @@ export class BookingService extends RoomManager {
     readonly configService: ConfigService,
     readonly jwtService: JwtService,
     readonly logger: LoggerService,
+    readonly redis: RedisService,
   ) {
-    super(configService, jwtService, logger);
+    super(configService, jwtService, logger, redis);
   }
 
   async concertList() {
@@ -67,7 +69,7 @@ export class BookingService extends RoomManager {
   async roomStatus(body) {
     const callback = async () => {
       const { email } = body;
-      return await this.getRoomStatus(email);
+      return await this.getWaittingStatus(email);
     };
 
     return await this.transaction(callback, false);

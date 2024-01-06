@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoggerService } from '../logger/logger.service';
 import { User } from '@/database/entity/user/user.entity';
 import * as moment from 'moment';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class CostService extends RoomManager {
@@ -13,8 +14,9 @@ export class CostService extends RoomManager {
     readonly configService: ConfigService,
     readonly jwtService: JwtService,
     readonly logger: LoggerService,
+    readonly redis: RedisService,
   ) {
-    super(configService, jwtService, logger);
+    super(configService, jwtService, logger, redis);
   }
 
   async remainCost() {
@@ -25,9 +27,9 @@ export class CostService extends RoomManager {
   async payment(body) {
     const { amount, email } = body;
     const user = await this.dataSource.getRepository(User).findOneBy({ email });
-    const payload = this.jwtService.decode(user.user_token);
+    // const payload = this.jwtService.decode(user.user_token);
     const time = moment();
-    const diffTime = time.diff(payload.time, 'minutes');
+    const diffTime = time.diff(time, 'minutes');
 
     if (diffTime >= 5) {
       this.leaveRoom(user);

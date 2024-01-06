@@ -29,13 +29,7 @@ export class User {
   @Column()
   nickname: string;
 
-  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.DONE })
-  status: string;
-
-  @Column({ default: '' })
-  user_token: string;
-
-  // @OneToOne(() => Cost, (Cost) => Cost.user, { cascade: true })
-  // @JoinColumn([{ name: 'cost_id' }])
-  // cost: Cost;
+  @OneToOne(() => Cost)
+  @JoinColumn([{ name: 'cost_id' }])
+  cost: Cost;
 }

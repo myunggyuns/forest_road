@@ -4,6 +4,7 @@ import { User } from '@/database/entity/user/user.entity';
 import { DatabaseSource } from '@/database/index';
 import { LoggerService } from '@/service/logger/logger.service';
 import * as moment from 'moment';
+import { RedisService } from '../redis/redis.service';
 
 /**
  * TODO
@@ -19,36 +20,56 @@ export class RoomManager extends DatabaseSource {
   room: Map<string, User>;
   configService: ConfigService;
   jwtService: JwtService;
-  waitingQueue: User[];
   waitIndex: number;
   logger: LoggerService;
+  redis: RedisService;
 
   constructor(
     configService: ConfigService,
     jwtServcie: JwtService,
     logger: LoggerService,
+    redis: RedisService,
   ) {
     super();
     this.room = new Map();
     this.configService = configService;
     this.jwtService = jwtServcie;
-    this.waitingQueue = [];
     this.waitIndex = 0;
     this.logger = logger;
+    this.redis = redis;
+  }
+
+  public async joinQueue(user) {
+    this.waitIndex++;
+    this.logger.log(
+      `User enter joinQueue user.uuid: ${user.uuid}`,
+      'joinQueue',
+    );
+    try {
+      const size = this.configService.get('ROOM_SIZE');
+      await this.redis.zAdd('joinQueue', this.waitIndex, JSON.stringify(user));
+      if (this.room.size < Number(size)) {
+        const index = await this.redis.zRank('joinQueue', JSON.stringify(user));
+        const list = await this.redis.zRange('joinQueue');
+        const queuedUser = JSON.parse(list[index]);
+        await this.redis.zRem('joinQueue', JSON.stringify(user));
+        this.joinRoom(queuedUser);
+      }
+    } catch (error) {
+      this.logger.error(error.message, 'joinQueue');
+    }
   }
 
   private async joinRoom(user) {
     this.logger.log(`User enter joinRoom user.uuid: ${user.uuid}`, 'joinRoom');
-    const time = moment();
+    const time = moment().format('yyyy-mm-dd hh:mm:ss');
     const payload = { uuid: user.uuid, time };
     const userToken = await this.jwtService.signAsync(payload);
-    const userRepo = this.dataSource.getRepository(User);
+    const updateUser = {
+      ...user,
+      userToken,
+    };
     try {
-      await userRepo.update(
-        { uuid: user.uuid },
-        { status: 'work', user_token: userToken },
-      );
-      const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
       this.room.set(user.uuid, updateUser);
     } catch (error) {
       this.logger.error(error.message, 'joinRoom');
@@ -63,13 +84,6 @@ export class RoomManager extends DatabaseSource {
     if (this.room.has(user.uuid)) {
       this.room.delete(user.uuid);
       try {
-        await this.dataSource
-          .getRepository(User)
-          .update({ uuid: user.uuid }, { status: 'done', user_token: '' });
-        if (this.waitingQueue.length) {
-          const queueUser = this.waitingQueue.shift();
-          this.joinRoom(queueUser);
-        }
       } catch (error) {
         this.logger.error(error.message, 'leaveRoom');
       }
@@ -78,52 +92,27 @@ export class RoomManager extends DatabaseSource {
     }
   }
 
-  public async joinQueue(user) {
-    const time = moment();
-    this.waitIndex++;
-    this.logger.log(
-      `User enter joinQueue user.uuid: ${user.uuid}`,
-      'joinQueue',
-    );
-    const payload = { uuid: user.uuid, time, waitIndex: this.waitIndex };
-    const userToken = await this.jwtService.signAsync(payload);
-    const userRepo = this.dataSource.getRepository(User);
-    try {
-      await userRepo.update(
-        { uuid: user.uuid },
-        { user_token: userToken, status: 'wait' },
-      );
-      const updateUser = await userRepo.findOneBy({ uuid: user.uuid });
-      const size = this.configService.get('ROOM_SIZE');
-      this.waitingQueue.push(updateUser);
-      // console.log(this.waitingQueue);
-      if (this.room.size < Number(size)) {
-        const queueUser = this.waitingQueue.shift();
-        this.joinRoom(queueUser);
-        this.waitIndex--;
-      }
-    } catch (error) {
-      this.logger.error(error.message, 'joinQueue');
-    }
-  }
+  async releaseRoom() {}
 
-  async getRoomStatus(email) {
+  async getWaittingStatus(email) {
     const user = await this.dataSource.getRepository(User).findOneBy({ email });
-    let waitLine = 0;
-    this.waitingQueue.forEach((value) => {
-      if (user.uuid === value.uuid) {
-        const payload = this.jwtService.decode(value.user_token);
-        waitLine = Number(payload.waitIndex);
-      }
-    });
+
+    const waitLine =
+      (await this.redis.zRank('joinQueue', JSON.stringify(user))) + 1;
+
     if (waitLine) {
-      this.logger.debug(
+      this.logger.log(
         `Get Room wait line user.uuid: ${user.uuid}`,
         'RoomStatus',
       );
       return waitLine.toString();
+    } else if (waitLine === null) {
+      this.logger.log(
+        `exist in the room user.uuid: ${user.uuid}`,
+        'RoomStatus',
+      );
     } else {
-      this.logger.debug(
+      this.logger.log(
         `exist in the room user.uuid: ${user.uuid}`,
         'RoomStatus',
       );

@@ -8,6 +8,7 @@ import { BookingController } from './booking.controller';
 import { BookingService } from '../service/booking/booking.service';
 import { LoggerModule } from '@/logger/logger.module';
 import { JwtModule } from '@nestjs/jwt';
+import { RedisModule } from '@/redis/redis.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: 'salt',
       signOptions: { expiresIn: '60s' },
     }),
+    RedisModule,
   ],
   providers: [BookingService],
   controllers: [BookingController],

@@ -5,8 +5,8 @@ export const redisClientFactory: FactoryProvider<Redis> = {
   provide: 'RedisClient',
   useFactory: () => {
     const redisInstance = new Redis({
-      host: 'localhost',
-      port: 6379,
+      host: process.env['REDIS_HOST'],
+      port: Number(process.env['REDIS_PORT']),
     });
     redisInstance.on('error', (e) => {
       throw new Error(`Redis connection faild: ${e}`);
