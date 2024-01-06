@@ -9,6 +9,8 @@ import { User } from './database/entity/user/user.entity';
 import { Booking } from './database/entity/booking/booking.entity';
 import { Cost } from './database/entity/cost/cost.entity';
 import { LoggerModule } from './logger/logger.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { LoggerModule } from './logger/logger.module';
     CostModule,
     LoggerModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {
   constructor() {}

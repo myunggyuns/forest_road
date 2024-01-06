@@ -27,6 +27,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{steps.login-ecr.outputs.registry}}
           ECR_REPOSITORY: forest_road
+          AWS_REGION: ap-northeast-2
           IMAGE_TAG: forest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
